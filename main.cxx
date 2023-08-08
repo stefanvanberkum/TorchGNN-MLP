@@ -9,6 +9,8 @@
 #include <iostream>
 
 int main() {
+    openblas_set_num_threads(1);
+
     // Read data.
     std::string const HOME = getenv("HOME");
     std::vector<float> X;
@@ -48,11 +50,7 @@ int main() {
       std::vector<float> X_batch(X.begin() + 3072 * i, X.begin() + 3072 * (i + batch_size));
       std::vector<torch::jit::IValue> inputs;
       inputs.push_back(torch::from_blob(X_batch.data(), {batch_size, 3072}));
-
-      start = std::chrono::high_resolution_clock::now();
       at::Tensor out_batch = torch_model.forward(inputs).toTensor();
-      end = std::chrono::high_resolution_clock::now();
-      torchGNN_time += end - start;
 
       float* out_batch_arr = out_batch.data_ptr<float>();
       for (int j = 0; j < batch_size * 10; j++) {
@@ -79,11 +77,7 @@ int main() {
     out.clear();
     for (int i = 0; i < 10000; i += batch_size) {
       std::vector<float> X_batch(X.begin() + 3072 * i, X.begin() + 3072 * (i + batch_size));
-
-      start = std::chrono::high_resolution_clock::now();
       std::vector<float> out_batch = torchGNN_model.forward(X_batch);
-      end = std::chrono::high_resolution_clock::now();
-      torchGNN_time += end - start;
 
       for (float e: out_batch) {
         out.push_back(e);
@@ -105,12 +99,34 @@ int main() {
       }
     }
     out_f.close();
+
+    for (int round = 0; round < 100; round++) {
+      for (int i = 0; i < 10000; i += batch_size) {
+        std::vector<float> X_batch(X.begin() + 3072 * i, X.begin() + 3072 * (i + batch_size));
+        std::vector<torch::jit::IValue> inputs;
+        inputs.push_back(torch::from_blob(X_batch.data(), {batch_size, 3072}));
+
+        start = std::chrono::high_resolution_clock::now();
+        at::Tensor out_batch = torch_model.forward(inputs).toTensor();
+        end = std::chrono::high_resolution_clock::now();
+        torch_time += end - start;
+      }
+
+      for (int i = 0; i < 10000; i += batch_size) {
+        std::vector<float> X_batch(X.begin() + 3072 * i, X.begin() + 3072 * (i + batch_size));
+
+        start = std::chrono::high_resolution_clock::now();
+        std::vector<float> out_batch = torchGNN_model.forward(X_batch);
+        end = std::chrono::high_resolution_clock::now();
+        torchGNN_time += end - start;
+      }
+    }
     
     // Write timings.
     std::ofstream time_f;
     time_f.open(HOME + "/TorchGNN/timings.csv", std::ios::trunc);
-    time_f << "PyTorch," << std::chrono::duration_cast<std::chrono::seconds>(torch_time).count() << std::endl;
-    time_f << "TorchGNN," << std::chrono::duration_cast<std::chrono::seconds>(torchGNN_time).count() << std::endl;
+    time_f << "PyTorch," << std::chrono::duration_cast<std::chrono::milliseconds>(torch_time).count() << std::endl;
+    time_f << "TorchGNN," << std::chrono::duration_cast<std::chrono::milliseconds>(torchGNN_time).count() << std::endl;
     time_f.close();
 
     return 0;

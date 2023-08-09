@@ -1,3 +1,5 @@
+import os
+
 import ROOT
 import numpy as np
 import torch
@@ -95,7 +97,7 @@ def main():
     model.addModule(ROOT.TMVA.Experimental.SOFIE.RModule_Linear('relu_2', 200, 10), 'linear_3')
     model.addModule(ROOT.TMVA.Experimental.SOFIE.RModule_Softmax('linear_3'), 'softmax')
     model.extractParameters(torch_model)
-    model.save("/home/stefan/TorchGNN-MLP", "Model", True)
+    model.save(os.getcwd(), 'Model', True)
 
 
 class Model(torch.nn.Module):

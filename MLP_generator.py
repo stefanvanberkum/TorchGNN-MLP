@@ -56,7 +56,7 @@ def main():
                 f.write('')
 
         correct = 0
-        for data in loader:  # Iterate in batches over the training/test dataset.
+        for data in loader:  # Iterate in batches over the test dataset.
             data[0] = data[0].to(device)
             data[1] = data[1].to(device)
             out = torch_model(data[0])

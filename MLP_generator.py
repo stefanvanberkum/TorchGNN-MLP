@@ -70,7 +70,6 @@ def main():
 
             pred = out.argmax(dim=1)  # Use the class with the highest probability.
             correct += int((pred == data[1]).sum())  # Check against ground-truth labels.
-
         return correct / len(loader.dataset)  # Derive ratio of correct predictions.
 
     for epoch in range(1, 50):
@@ -90,14 +89,14 @@ def main():
 
     # Generate ROOT model.
     model = ROOT.TMVA.Experimental.SOFIE.RModel_TorchGNN(['X'], [[-1, 3072]])
-    model.addModule(ROOT.TMVA.Experimental.SOFIE.RModule_Linear('X', 3072, 200), 'linear_1')
-    model.addModule(ROOT.TMVA.Experimental.SOFIE.RModule_ReLU('linear_1'), 'relu_1')
-    model.addModule(ROOT.TMVA.Experimental.SOFIE.RModule_Linear('relu_1', 200, 200), 'linear_2')
-    model.addModule(ROOT.TMVA.Experimental.SOFIE.RModule_ReLU('linear_2'), 'relu_2')
-    model.addModule(ROOT.TMVA.Experimental.SOFIE.RModule_Linear('relu_2', 200, 10), 'linear_3')
-    model.addModule(ROOT.TMVA.Experimental.SOFIE.RModule_Softmax('linear_3'), 'softmax')
-    model.extractParameters(torch_model)
-    model.save(os.getcwd(), 'Model', True)
+    model.AddModule(ROOT.TMVA.Experimental.SOFIE.RModule_Linear('X', 3072, 200), 'linear_1')
+    model.AddModule(ROOT.TMVA.Experimental.SOFIE.RModule_ReLU('linear_1'), 'relu_1')
+    model.AddModule(ROOT.TMVA.Experimental.SOFIE.RModule_Linear('relu_1', 200, 200), 'linear_2')
+    model.AddModule(ROOT.TMVA.Experimental.SOFIE.RModule_ReLU('linear_2'), 'relu_2')
+    model.AddModule(ROOT.TMVA.Experimental.SOFIE.RModule_Linear('relu_2', 200, 10), 'linear_3')
+    model.AddModule(ROOT.TMVA.Experimental.SOFIE.RModule_Softmax('linear_3'), 'softmax')
+    model.ExtractParameters(torch_model)
+    model.Save(os.getcwd(), 'Model', True)
 
 
 class Model(torch.nn.Module):

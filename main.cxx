@@ -9,8 +9,6 @@
 #include <iostream>
 
 int main() {
-    openblas_set_num_threads(1);
-
     // Read data.
     std::filesystem::path current_path = std::filesystem::path(__FILE__).parent_path();
     std::vector<float> X;

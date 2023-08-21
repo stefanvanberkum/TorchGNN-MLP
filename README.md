@@ -1,8 +1,10 @@
 # TorchGNN-MLP
 Integrated example of MLP functionality in ROOT's TorchGNN.
 
+## Dependencies
 The code requires LibTorch, which can be downloaded from the [PyTorch homepage](https://pytorch.org/). We used version TorchLib 2.0.1 (cxx11 ABI).
 
+## How to run
 The code can be compiled and run in the following way:
 ```
 cd code_directory

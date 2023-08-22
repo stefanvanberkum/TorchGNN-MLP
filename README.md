@@ -2,10 +2,13 @@
 Integrated example of MLP functionality in ROOT's TorchGNN.
 
 ## Dependencies
-The code requires LibTorch, which can be downloaded from the [PyTorch homepage](https://pytorch.org/). We used version TorchLib 2.0.1 (cxx11 ABI).
+- LibTorch: Can be downloaded from the [PyTorch homepage](https://pytorch.org/). We used version TorchLib 2.0.1 (cxx11 ABI).
+- BLAS: We used [OpenBLAS](https://www.openblas.net/).
 
 ## How to run
-The code can be compiled and run in the following way:
+The model can be trained and parsed by running the Python code ```MLP_generator.py```.
+
+The C++ benchmarking code ```main.cxx``` can be compiled and run in the following way:
 ```
 cd code_directory
 mkdir build

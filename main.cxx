@@ -33,7 +33,7 @@ int main() {
     torch::Device device(torch::kCPU);
     torch::jit::script::Module torch_model = torch::jit::load(current_path.string() + "/model_script.pt", device);
 
-    int batch_size = 64;
+    int batch_size = 32;
     int in_features = 3072;
     int n_classes = 10;
 
